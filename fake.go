@@ -138,6 +138,14 @@ func (s *mockServer) Lookup(ctx context.Context, in *pb.LookupRequest) (*pb.Look
 	return res.(*pb.LookupResponse), nil
 }
 
+func (s *mockServer) BeginTransaction(_ context.Context, in *pb.BeginTransactionRequest) (*pb.BeginTransactionResponse, error) {
+	res, err := s.popRPC(in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.BeginTransactionResponse), nil
+}
+
 func (s *mockServer) Commit(_ context.Context, in *pb.CommitRequest) (*pb.CommitResponse, error) {
 	res, err := s.popRPC(in)
 	if err != nil {
@@ -146,10 +154,10 @@ func (s *mockServer) Commit(_ context.Context, in *pb.CommitRequest) (*pb.Commit
 	return res.(*pb.CommitResponse), nil
 }
 
-func (s *mockServer) BeginTransaction(_ context.Context, in *pb.BeginTransactionRequest) (*pb.BeginTransactionResponse, error) {
+func (s *mockServer) Rollback(_ context.Context, in *pb.RollbackRequest) (*pb.RollbackResponse, error) {
 	res, err := s.popRPC(in)
 	if err != nil {
 		return nil, err
 	}
-	return res.(*pb.BeginTransactionResponse), nil
+	return res.(*pb.RollbackResponse), nil
 }
