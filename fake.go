@@ -161,3 +161,11 @@ func (s *mockServer) Rollback(_ context.Context, in *pb.RollbackRequest) (*pb.Ro
 	}
 	return res.(*pb.RollbackResponse), nil
 }
+
+func (s *mockServer) RunQuery(_ context.Context, in *pb.RunQueryRequest) (*pb.RunQueryResponse, error) {
+	res, err := s.popRPC(in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.RunQueryResponse), nil
+}
