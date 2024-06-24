@@ -80,16 +80,16 @@ func (s *mockServer) popRPC(gotReq proto.Message) (interface{}, error) {
 			ri.adjust(gotReq)
 		}
 
-		gotReqString, err := proto.Marshal(gotReq)
-		if err != nil {
-			return nil, fmt.Errorf("mockServer: failed to marshal got request: %v", err)
-		}
-		wantReqString, err := proto.Marshal(ri.wantReq)
-		if err != nil {
-			return nil, fmt.Errorf("mockServer: failed to marshal want request: %v", err)
-		}
+		// gotReqString, err := proto.Marshal(gotReq)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("mockServer: failed to marshal got request: %v", err)
+		// }
+		// wantReqString, err := proto.Marshal(ri.wantReq)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("mockServer: failed to marshal want request: %v", err)
+		// }
 		if !proto.Equal(gotReq, ri.wantReq) {
-			diff := cmp.Diff(string(gotReqString), string(wantReqString))
+			diff := cmp.Diff(gotReq, ri.wantReq)
 			return nil, fmt.Errorf("mockServer: bad request\ngot:%T\nwant:%T\n-got\n+want:\n%s",
 				gotReq,
 				ri.wantReq,
