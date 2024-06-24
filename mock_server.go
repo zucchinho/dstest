@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"reflect"
 
+	"github.com/google/go-cmp/cmp"
 	pb "google.golang.org/genproto/googleapis/datastore/v1"
 	"google.golang.org/protobuf/proto"
 )
@@ -88,11 +89,11 @@ func (s *mockServer) popRPC(gotReq proto.Message) (interface{}, error) {
 			return nil, fmt.Errorf("mockServer: failed to marshal want request: %v", err)
 		}
 		if !proto.Equal(gotReq, ri.wantReq) {
-			return nil, fmt.Errorf("mockServer: bad request\ngot:%T\n%s\nwant:%T\n%s",
+			diff := cmp.Diff(gotReqString, wantReqString)
+			return nil, fmt.Errorf("mockServer: bad request\ngot:%T\nwant:%T\n-got\n+want:\n%s",
 				gotReq,
-				gotReqString,
 				ri.wantReq,
-				wantReqString,
+				diff,
 			)
 		}
 	}
