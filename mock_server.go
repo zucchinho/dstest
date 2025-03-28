@@ -90,7 +90,7 @@ func (s *mockServer) popRPC(gotReq proto.Message) (interface{}, error) {
 		// 	return nil, fmt.Errorf("mockServer: failed to marshal want request: %v", err)
 		// }
 		if !proto.Equal(gotReq, ri.wantReq) {
-			diff := cmp.Diff(gotReq, ri.wantReq, cmpopts.IgnoreUnexported(pb.CommitRequest{}, pb.Mutation{}, pb.Mutation_Upsert{}, pb.Entity{}, pb.Value{}, pb.Key{}, pb.Key_PathElement{}))
+			diff := cmp.Diff(gotReq, ri.wantReq, cmpopts.IgnoreUnexported(pb.CommitRequest{}, pb.Mutation{}, pb.Mutation_Upsert{}, pb.Entity{}, pb.Value{}, pb.Key{}, pb.Key_PathElement{}, pb.Value_TimestampValue{}))
 			return nil, fmt.Errorf("mockServer: bad request\ngot:%T\nwant:%T\n-got\n+want:\n%s",
 				gotReq,
 				ri.wantReq,
