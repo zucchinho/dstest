@@ -18,6 +18,23 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+var typesToIgnoreUnexported = []interface{}{
+	pb.BeginTransactionRequest{},
+	pb.CommitRequest{},
+	pb.Mutation{},
+	pb.Mutation_Upsert{},
+	pb.Entity{},
+	pb.Value{},
+	pb.Key{},
+	pb.RunQueryRequest{},
+	pb.RollbackRequest{},
+	pb.LookupRequest{},
+	pb.RunAggregationQueryRequest{},
+	pb.ReadOptions{},
+	pb.PartitionId{},
+	pb.TransactionOptions{},
+}
+
 type mockServer struct {
 	pb.DatastoreServer
 
@@ -90,7 +107,7 @@ func (s *mockServer) popRPC(gotReq proto.Message) (interface{}, error) {
 		// 	return nil, fmt.Errorf("mockServer: failed to marshal want request: %v", err)
 		// }
 		if !proto.Equal(gotReq, ri.wantReq) {
-			diff := cmp.Diff(gotReq, ri.wantReq, cmpopts.IgnoreUnexported(pb.CommitRequest{}, pb.Mutation{}, pb.Mutation_Upsert{}, pb.Entity{}, pb.Value{}, pb.Key{}))
+			diff := cmp.Diff(gotReq, ri.wantReq, cmpopts.IgnoreUnexported(typesToIgnoreUnexported...))
 			return nil, fmt.Errorf("mockServer: bad request\ngot:%T\nwant:%T\n-got\n+want:\n%s",
 				gotReq,
 				ri.wantReq,
