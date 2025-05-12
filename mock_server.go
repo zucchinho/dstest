@@ -12,31 +12,14 @@ import (
 	"fmt"
 	"reflect"
 
+	"cloud.google.com/go/datastore/apiv1/datastorepb"
 	"github.com/google/go-cmp/cmp"
-	pb "google.golang.org/genproto/googleapis/datastore/v1"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/testing/protocmp"
 )
 
-// var typesToIgnoreUnexported = []any{
-// 	pb.BeginTransactionRequest{},
-// 	pb.CommitRequest{},
-// 	pb.Mutation{},
-// 	pb.Mutation_Upsert{},
-// 	pb.Entity{},
-// 	pb.Value{},
-// 	pb.Key{},
-// 	pb.RunQueryRequest{},
-// 	pb.RollbackRequest{},
-// 	pb.LookupRequest{},
-// 	pb.RunAggregationQueryRequest{},
-// 	pb.ReadOptions{},
-// 	pb.PartitionId{},
-// 	pb.TransactionOptions{},
-// }
-
 type mockServer struct {
-	pb.DatastoreServer
+	datastorepb.DatastoreServer
 
 	Addr     string
 	reqItems []reqItem
@@ -55,7 +38,7 @@ func newMockServer() (*mockServer, func(), error) {
 	}
 
 	mock := &mockServer{Addr: srv.Addr}
-	pb.RegisterDatastoreServer(srv.Gsrv, mock)
+	datastorepb.RegisterDatastoreServer(srv.Gsrv, mock)
 	srv.Start()
 
 	return mock, func() {
@@ -98,14 +81,6 @@ func (s *mockServer) popRPC(gotReq proto.Message) (interface{}, error) {
 			ri.adjust(gotReq)
 		}
 
-		// gotReqString, err := proto.Marshal(gotReq)
-		// if err != nil {
-		// 	return nil, fmt.Errorf("mockServer: failed to marshal got request: %v", err)
-		// }
-		// wantReqString, err := proto.Marshal(ri.wantReq)
-		// if err != nil {
-		// 	return nil, fmt.Errorf("mockServer: failed to marshal want request: %v", err)
-		// }
 		if !proto.Equal(gotReq, ri.wantReq) {
 			diff := cmp.Diff(gotReq, ri.wantReq, protocmp.Transform())
 			return nil, fmt.Errorf("mockServer: bad request\ngot:%T\nwant:%T\n-got\n+want:\n%s",
@@ -128,42 +103,66 @@ func (s *mockServer) reset() {
 	s.resps = nil
 }
 
-func (s *mockServer) Lookup(ctx context.Context, in *pb.LookupRequest) (*pb.LookupResponse, error) {
+func (s *mockServer) Lookup(ctx context.Context, in *datastorepb.LookupRequest) (*datastorepb.LookupResponse, error) {
 	res, err := s.popRPC(in)
 	if err != nil {
 		return nil, err
 	}
-	return res.(*pb.LookupResponse), nil
+	return res.(*datastorepb.LookupResponse), nil
 }
 
-func (s *mockServer) BeginTransaction(_ context.Context, in *pb.BeginTransactionRequest) (*pb.BeginTransactionResponse, error) {
+func (s *mockServer) BeginTransaction(_ context.Context, in *datastorepb.BeginTransactionRequest) (*datastorepb.BeginTransactionResponse, error) {
 	res, err := s.popRPC(in)
 	if err != nil {
 		return nil, err
 	}
-	return res.(*pb.BeginTransactionResponse), nil
+	return res.(*datastorepb.BeginTransactionResponse), nil
 }
 
-func (s *mockServer) Commit(_ context.Context, in *pb.CommitRequest) (*pb.CommitResponse, error) {
+func (s *mockServer) Commit(_ context.Context, in *datastorepb.CommitRequest) (*datastorepb.CommitResponse, error) {
 	res, err := s.popRPC(in)
 	if err != nil {
 		return nil, err
 	}
-	return res.(*pb.CommitResponse), nil
+	return res.(*datastorepb.CommitResponse), nil
 }
 
-func (s *mockServer) Rollback(_ context.Context, in *pb.RollbackRequest) (*pb.RollbackResponse, error) {
+func (s *mockServer) Rollback(_ context.Context, in *datastorepb.RollbackRequest) (*datastorepb.RollbackResponse, error) {
 	res, err := s.popRPC(in)
 	if err != nil {
 		return nil, err
 	}
-	return res.(*pb.RollbackResponse), nil
+	return res.(*datastorepb.RollbackResponse), nil
 }
 
-func (s *mockServer) RunQuery(_ context.Context, in *pb.RunQueryRequest) (*pb.RunQueryResponse, error) {
+func (s *mockServer) RunQuery(_ context.Context, in *datastorepb.RunQueryRequest) (*datastorepb.RunQueryResponse, error) {
 	res, err := s.popRPC(in)
 	if err != nil {
 		return nil, err
 	}
-	return res.(*pb.RunQueryResponse), nil
+	return res.(*datastorepb.RunQueryResponse), nil
+}
+
+func (s *mockServer) RunAggregationQuery(_ context.Context, in *datastorepb.RunAggregationQueryRequest) (*datastorepb.RunAggregationQueryResponse, error) {
+	res, err := s.popRPC(in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*datastorepb.RunAggregationQueryResponse), nil
+}
+
+func (s *mockServer) AllocateIds(_ context.Context, in *datastorepb.AllocateIdsRequest) (*datastorepb.AllocateIdsResponse, error) {
+	res, err := s.popRPC(in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*datastorepb.AllocateIdsResponse), nil
+}
+
+func (s *mockServer) ReserveIds(_ context.Context, in *datastorepb.ReserveIdsRequest) (*datastorepb.ReserveIdsResponse, error) {
+	res, err := s.popRPC(in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*datastorepb.ReserveIdsResponse), nil
 }
