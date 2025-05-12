@@ -108,7 +108,10 @@ func (s *mockServer) Lookup(ctx context.Context, in *datastorepb.LookupRequest) 
 	if err != nil {
 		return nil, err
 	}
-	return res.(*datastorepb.LookupResponse), nil
+	if res, ok := res.(*datastorepb.LookupResponse); ok {
+		return res, nil
+	}
+	return nil, fmt.Errorf("mockServer: unexpected response type %T", res)
 }
 
 func (s *mockServer) BeginTransaction(_ context.Context, in *datastorepb.BeginTransactionRequest) (*datastorepb.BeginTransactionResponse, error) {
@@ -116,7 +119,10 @@ func (s *mockServer) BeginTransaction(_ context.Context, in *datastorepb.BeginTr
 	if err != nil {
 		return nil, err
 	}
-	return res.(*datastorepb.BeginTransactionResponse), nil
+	if res, ok := res.(*datastorepb.BeginTransactionResponse); ok {
+		return res, nil
+	}
+	return nil, fmt.Errorf("mockServer: unexpected response type %T", res)
 }
 
 func (s *mockServer) Commit(_ context.Context, in *datastorepb.CommitRequest) (*datastorepb.CommitResponse, error) {
@@ -124,7 +130,10 @@ func (s *mockServer) Commit(_ context.Context, in *datastorepb.CommitRequest) (*
 	if err != nil {
 		return nil, err
 	}
-	return res.(*datastorepb.CommitResponse), nil
+	if res, ok := res.(*datastorepb.CommitResponse); ok {
+		return res, nil
+	}
+	return nil, fmt.Errorf("mockServer: unexpected response type %T", res)
 }
 
 func (s *mockServer) Rollback(_ context.Context, in *datastorepb.RollbackRequest) (*datastorepb.RollbackResponse, error) {
@@ -132,7 +141,10 @@ func (s *mockServer) Rollback(_ context.Context, in *datastorepb.RollbackRequest
 	if err != nil {
 		return nil, err
 	}
-	return res.(*datastorepb.RollbackResponse), nil
+	if res, ok := res.(*datastorepb.RollbackResponse); ok {
+		return res, nil
+	}
+	return nil, fmt.Errorf("mockServer: unexpected response type %T", res)
 }
 
 func (s *mockServer) RunQuery(_ context.Context, in *datastorepb.RunQueryRequest) (*datastorepb.RunQueryResponse, error) {
@@ -140,7 +152,10 @@ func (s *mockServer) RunQuery(_ context.Context, in *datastorepb.RunQueryRequest
 	if err != nil {
 		return nil, err
 	}
-	return res.(*datastorepb.RunQueryResponse), nil
+	if res, ok := res.(*datastorepb.RunQueryResponse); ok {
+		return res, nil
+	}
+	return nil, fmt.Errorf("mockServer: unexpected response type %T", res)
 }
 
 func (s *mockServer) RunAggregationQuery(_ context.Context, in *datastorepb.RunAggregationQueryRequest) (*datastorepb.RunAggregationQueryResponse, error) {
@@ -148,7 +163,10 @@ func (s *mockServer) RunAggregationQuery(_ context.Context, in *datastorepb.RunA
 	if err != nil {
 		return nil, err
 	}
-	return res.(*datastorepb.RunAggregationQueryResponse), nil
+	if res, ok := res.(*datastorepb.RunAggregationQueryResponse); ok {
+		return res, nil
+	}
+	return nil, fmt.Errorf("mockServer: unexpected response type %T", res)
 }
 
 func (s *mockServer) AllocateIds(_ context.Context, in *datastorepb.AllocateIdsRequest) (*datastorepb.AllocateIdsResponse, error) {
@@ -156,7 +174,10 @@ func (s *mockServer) AllocateIds(_ context.Context, in *datastorepb.AllocateIdsR
 	if err != nil {
 		return nil, err
 	}
-	return res.(*datastorepb.AllocateIdsResponse), nil
+	if res, ok := res.(*datastorepb.AllocateIdsResponse); ok {
+		return res, nil
+	}
+	return nil, fmt.Errorf("mockServer: unexpected response type %T", res)
 }
 
 func (s *mockServer) ReserveIds(_ context.Context, in *datastorepb.ReserveIdsRequest) (*datastorepb.ReserveIdsResponse, error) {
@@ -164,5 +185,8 @@ func (s *mockServer) ReserveIds(_ context.Context, in *datastorepb.ReserveIdsReq
 	if err != nil {
 		return nil, err
 	}
-	return res.(*datastorepb.ReserveIdsResponse), nil
+	if res, ok := res.(*datastorepb.ReserveIdsResponse); ok {
+		return res, nil
+	}
+	return nil, fmt.Errorf("mockServer: unexpected response type %T", res)
 }
